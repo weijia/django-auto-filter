@@ -22,9 +22,16 @@ Install django-auto-filter::
 
     pip install django-auto-filter
 
-Then use it in a project::
+Then use it in a project
 
-    import django_auto_filter
+urls.py::
+
+    from django.conf.urls import patterns, url
+    from django_auto_filter.views_django_auto_filter import DjangoAutoFilter
+
+    urlpatterns = patterns('',
+                           url(r'', DjangoAutoFilter.as_view()),
+                           )
 
 Features
 --------

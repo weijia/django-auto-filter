@@ -14,14 +14,14 @@ from django_tables2.utils import A  # alias for Accessor
 __author__ = 'weijia'
 
 
-class DjangoFilterTemplateView(TemplateView):
+class DjangoAutoFilter(TemplateView):
     template_name = 'django_filter_with_template/filters.html'
     model_class = User
     filter_fields = {"username": ["icontains"]}
     edit_namespace = "admin"
 
     def __init__(self, **kwargs):
-        super(DjangoFilterTemplateView, self).__init__(**kwargs)
+        super(DjangoAutoFilter, self).__init__(**kwargs)
         # self.model_class = None
         self.table_to_report = None
 
@@ -52,13 +52,13 @@ class DjangoFilterTemplateView(TemplateView):
             "Meta": type("Meta", (),
                          {"model": self.model_class,
                           "form": self.get_contains_all_keyword_form(),
-                          "fields": self.filter_fields
+                          # "fields": self.filter_fields
                           })
         })
         return filter_class
 
     def get_context_data(self, **kwargs):
-        context = super(DjangoFilterTemplateView, self).get_context_data(**kwargs)
+        context = super(DjangoAutoFilter, self).get_context_data(**kwargs)
         keyword_form = self.get_contains_all_keyword_form()(self.request.GET)
         query = Q()
         if keyword_form.is_valid():
