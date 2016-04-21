@@ -15,7 +15,7 @@ __author__ = 'weijia'
 
 
 class DjangoAutoFilter(TemplateView):
-    template_name = 'django_filter_with_template/filters.html'
+    template_name = 'django_auto_filter/filters.html'
     model_class = User
     filter_fields = {"username": ["icontains"]}
     edit_namespace = "admin"
