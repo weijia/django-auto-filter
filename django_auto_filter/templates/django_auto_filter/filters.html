@@ -12,22 +12,28 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
- <!--Latest compiled and minified CSS -->
 <link rel="stylesheet" href="/static/css/django_auto_filter.css">
+<!--Latest compiled and minified CSS -->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
 
-<!-- Latest compiled and minified JavaScript -->
+<!--&lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>
 
-<!-- Latest compiled and minified Locales -->
+<!--&lt;!&ndash; Latest compiled and minified Locales &ndash;&gt;-->
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/static/js/django_auto_filter.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.js"></script>
 <script>
 $(function (){
-    $('table').bootstrapTable();
+    //$('table').bootstrapTable();
     $('table td:first-child').each(function(){
         $(this).html('<a href="{{admin_base_url}}'.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
     });
 });
 </script>
+<div class="scroll-table-container">
 {% render_table table %}
+</div>
 {% endblock %}
