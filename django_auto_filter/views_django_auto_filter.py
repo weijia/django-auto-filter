@@ -98,8 +98,12 @@ class DjangoAutoFilter(TemplateView):
                 # Multiple selection field
                 if len(f.form.cleaned_data[field]) > 0:
                     exact_filter = {"%s__in" % field: f.form.cleaned_data[field]}
+                else:
+                    continue
             else:
                 # Single select field
+                if f.form.cleaned_data[field] is None:
+                    continue
                 exact_filter = {field: f.form.cleaned_data[field]}
             filter_query_set = filter_query_set.filter(**exact_filter)
 
