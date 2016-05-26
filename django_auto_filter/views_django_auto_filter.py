@@ -91,7 +91,18 @@ class DjangoAutoFilter(TemplateView):
 
         f = self.get_filter_class()(self.request.GET, queryset=queryset)
 
-        table = self.get_table_report_class()(f.qs)
+        filter_query_set = f.qs
+
+        for field in self.ajax_fields:
+            if type(f.form.cleaned_data[field]) is list:
+                # Multiple selection field
+                exact_filter = {"%s__in" % field: f.form.cleaned_data[field]}
+            else:
+                # Single select field
+                exact_filter = {field: f.form.cleaned_data[field]}
+            filter_query_set = filter_query_set.filter(**exact_filter)
+
+        table = self.get_table_report_class()(filter_query_set)
         # table.paginate(page=request.GET.get('page', 1), per_page=5)
         # RequestConfig(request, paginate={"per_page": 5}).configure(table)
         self.table_to_report = RequestConfig(self.request, paginate={"per_page": 5}).configure(table)
