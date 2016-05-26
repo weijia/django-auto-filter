@@ -96,7 +96,8 @@ class DjangoAutoFilter(TemplateView):
         for field in self.ajax_fields:
             if type(f.form.cleaned_data[field]) is list:
                 # Multiple selection field
-                exact_filter = {"%s__in" % field: f.form.cleaned_data[field]}
+                if len(f.form.cleaned_data[field]) > 0:
+                    exact_filter = {"%s__in" % field: f.form.cleaned_data[field]}
             else:
                 # Single select field
                 exact_filter = {field: f.form.cleaned_data[field]}
