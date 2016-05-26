@@ -74,7 +74,8 @@ class DjangoAutoFilter(TemplateView):
         # table.paginate(page=request.GET.get('page', 1), per_page=5)
         # RequestConfig(request, paginate={"per_page": 5}).configure(table)
         self.table_to_report = RequestConfig(self.request, paginate={"per_page": 5}).configure(table)
-        return {"table": table, "filter": f, "admin_base_url": self.get_admin_url()}
+        admin_base_url = self.get_admin_url()
+        return {"table": table, "filter": f, "admin_base_url": admin_base_url}
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -85,4 +86,6 @@ class DjangoAutoFilter(TemplateView):
     def get_admin_url(self):
         content_type = ContentType.objects.get_for_model(self.model_class)
         url_name = "%s:%s_%s_change" % (self.edit_namespace, content_type.app_label, content_type.model)
-        return urlresolvers.reverse(url_name, args=("%d",))
+        url = urlresolvers.reverse(url_name, args=("1",))
+        url = url.replace("1",  "%d")
+        return url
