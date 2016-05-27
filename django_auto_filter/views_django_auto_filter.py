@@ -61,9 +61,7 @@ class DjangoAutoFilter(TemplateView):
 
     def get_filter_class(self):
         self.set_ajax_form()
-
         self.set_fields()
-
         class_attr = {
             "Meta": type("Meta", (),
                          {"model": self.model_class,
@@ -71,7 +69,6 @@ class DjangoAutoFilter(TemplateView):
                           "fields": self.text_fields,
                           }),
         }
-
         class_attr.update(self.choice_fields)
 
         filter_class = type(self.model_class.__name__ + "AutoFilter", (django_filters.FilterSet,), class_attr)
