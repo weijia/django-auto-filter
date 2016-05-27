@@ -13,6 +13,8 @@ import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
+# from storage_management.models_managed_item import ManagedItem
+from storage_management.models_managed_item import ManagedItem
 
 __author__ = 'weijia'
 
@@ -22,7 +24,7 @@ class DjangoAutoFilter(TemplateView):
     model_class = User
     filter_fields = {"username": ["icontains"]}
     # The following is also OK
-    filter_fields = ["username", ]
+    # filter_fields = ["username", ]
     edit_namespace = "admin"
     # Used by django-ajax-selects
     ajax_fields = {}
@@ -31,7 +33,10 @@ class DjangoAutoFilter(TemplateView):
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
         # self.model_class = None
+        self.choice_fields = {}
+        self.text_fields = {}
         self.table_to_report = None
+        self.ajax_form = None
 
     def get_contains_all_keyword_form(self):
         form_class = type(self.model_class.__name__ + "ContainAllKeywordForm", (forms.ModelForm,), {
@@ -55,28 +60,35 @@ class DjangoAutoFilter(TemplateView):
         return table_class
 
     def get_filter_class(self):
+        self.set_ajax_form()
 
-        ajax_form = make_ajax_form(self.model_class,
-                                   self.ajax_fields,
-                                   self.get_contains_all_keyword_form())
+        self.set_fields()
 
-        for field in ajax_form.declared_fields:
-            ajax_form.declared_fields[field].required = False
-
-        remaining_fields = []
-
-        for attr in enum_model_fields(self.model_class):
-            if attr.name not in self.ajax_fields:
-                remaining_fields.append(attr.name)
-
-        filter_class = type(self.model_class.__name__ + "AutoFilter", (django_filters.FilterSet,), {
+        class_attr = {
             "Meta": type("Meta", (),
                          {"model": self.model_class,
-                          "form": ajax_form,
-                          "fields": remaining_fields,
-                          })
-        })
+                          "form": self.ajax_form,
+                          "fields": self.text_fields,
+                          }),
+        }
+
+        class_attr.update(self.choice_fields)
+
+        filter_class = type(self.model_class.__name__ + "AutoFilter", (django_filters.FilterSet,), class_attr)
         return filter_class
+
+    def set_fields(self):
+        for attr in enum_model_fields(self.model_class):
+            if attr.name not in self.ajax_fields:
+                if hasattr(attr, "choices") and len(attr.choices):
+                    self.choice_fields[attr.name] = django_filters.MultipleChoiceFilter(choices=attr.choices)
+                else:
+                    self.text_fields[attr.name] = ["icontains"]
+
+    def set_ajax_form(self):
+        self.ajax_form = make_ajax_form(self.model_class, self.ajax_fields, self.get_contains_all_keyword_form())
+        for field in self.ajax_form.declared_fields:
+            self.ajax_form.declared_fields[field].required = False
 
     def get_context_data(self, **kwargs):
         context = super(DjangoAutoFilter, self).get_context_data(**kwargs)
