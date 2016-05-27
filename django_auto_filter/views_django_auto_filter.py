@@ -13,8 +13,6 @@ import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
-# from storage_management.models_managed_item import ManagedItem
-from storage_management.models_managed_item import ManagedItem
 
 __author__ = 'weijia'
 
