@@ -45,8 +45,8 @@ class DjangoAutoFilter(TemplateView):
                       "render_tags": render_tags,
                       "row_info": tables.TemplateColumn('<span {{ record|gen_tag_attr }}> </span>',
                                                         # Hide this column
-                                                        attrs={'th': {"style": "display:none"},
-                                                               "td": {"style": "display:none"}},
+                                                        attrs={'th': {"class": "hidden-column"},
+                                                               "td": {"class": "hidden-column"}},
                                                         ),
                       }
 
