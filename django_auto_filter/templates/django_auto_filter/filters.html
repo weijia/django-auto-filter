@@ -16,6 +16,8 @@
 
 <!--&lt;!&ndash; Latest compiled and minified Locales &ndash;&gt;-->
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/locale/bootstrap-table-zh-CN.min.js"></script>-->
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <script src="{% static 'js/bootstrap-table/dist/bootstrap-table.js'%}"></script>
 <script src="{% static 'csrf.js'%}"></script>
 <script src="{% static 'js/django_auto_filter.js' %}"></script>
@@ -38,21 +40,6 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
-<script>
-$(function (){
-    $('table').bootstrapTable();
-    $('body').taggingAjax({});
-    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, d, f){
-      console.log("onEditableSave", event, rowIndex, rowArray, d ,f);
-      //var
-      $('body').taggingAjax("setTagForItem", rowArray[1], $(rowArray[25]).attr("objectId"),
-        $(rowArray[25]).attr("contentType"));
-    });
-    $('table td:first-child').each(function(){
-        $(this).html('<a href="{{admin_base_url}}'.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
-    });
-});
-</script>
 <div class="scroll-table-container">
 {% render_table table %}
 </div>
