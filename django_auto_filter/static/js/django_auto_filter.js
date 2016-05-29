@@ -12,12 +12,12 @@ $(document).ready( function () {
 //    $('table').bootstrapTable();
     $('table').bootstrapTable();
     $('body').taggingAjax({});
-    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, editableElement){
+    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, oldValue, editableElement){
       console.log("onEditableSave", event, rowIndex, rowArray, editableElement);
       //var
       $('body').taggingAjax("setTagForItem", rowArray[1], $(rowArray[25]).attr("objectId"),
         $(rowArray[25]).attr("contentType"), function(){
-            editableElement.toggleClass("editable-unsaved")
+            editableElement.toggleClass("editable-unsaved");
         });
         return true;
     });

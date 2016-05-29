@@ -41,14 +41,16 @@ class DjangoAutoFilter(TemplateView):
     # # # ''',
     #                                           attrs={'th': {"data-editable": "true"},
     #             'td': {"objectId": "{{ record.id }}",  "tags": A("record.tags"), "contentType": 83}})}
-    additional_col = {"tags": tables.Column(attrs={'th': {"data-editable": "true"}}),
-                      "render_tags": render_tags,
-                      "row_info": tables.TemplateColumn('<span {{ record|gen_tag_attr }}> </span>',
-                                                        # Hide this column
-                                                        attrs={'th': {"class": "hidden-column"},
-                                                               "td": {"class": "hidden-column"}},
-                                                        ),
-                      }
+    additional_col = {
+        # The following line make the column editable (work for x editable)
+        "tags": tables.Column(attrs={'th': {"data-editable": "true"}}),
+        "render_tags": render_tags,
+        "row_info": tables.TemplateColumn('<span {{ record|gen_tag_attr }}> </span>',
+                                          # Hide this column
+                                          attrs={'th': {"class": "hidden-column"},
+                                                 "td": {"class": "hidden-column"}},
+                                          ),
+    }
 
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
