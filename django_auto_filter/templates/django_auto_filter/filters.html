@@ -2,9 +2,32 @@
 {% load bootstrap %}
 {% load static %}
 {% load django_tables2 %}
+{% load gen_tag_attr %}
+    {% block js %}
+        {{ block.super }}
+<link rel="stylesheet" href="{% static 'css/django_auto_filter.css' %}">
+<link rel="stylesheet" href="http://rawgit.com/akottr/dragtable/master/dragtable.css">
+<!--Latest compiled and minified CSS -->
+<link rel="stylesheet" href="{% static 'js/bootstrap-table/dist/bootstrap-table.min.css' %}">
+<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">-->
+
+<!--&lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>-->
+
+<!--&lt;!&ndash; Latest compiled and minified Locales &ndash;&gt;-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/locale/bootstrap-table-zh-CN.min.js"></script>-->
+<script src="{% static 'js/bootstrap-table/dist/bootstrap-table.js'%}"></script>
+<script src="{% static 'csrf.js'%}"></script>
+<script src="{% static 'js/django_auto_filter.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.css"/>
+<script src="http://rawgithub.com/akottr/dragtable/master/jquery.dragtable.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.js"></script>
+        {% include "tagging_app/tagging_head_inc.html" %}
+
+    {% endblock %}
 {% block content %}
-<script type='text/javascript' src="{% static 'js/jquery-ui.js' %}"></script>
-<link rel='stylesheet' type='text/css' href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}" />
+<!--<script type='text/javascript' src="{% static 'js/jquery-ui.js' %}"></script>-->
+<!--<link rel='stylesheet' type='text/css' href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}" />-->
 <form action="" method="get" class="form-inline">
     {% csrf_token %}
     {{ filter.form.media }}
@@ -15,23 +38,16 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
-<link rel="stylesheet" href="/static/css/django_auto_filter.css">
-<link rel="stylesheet" href="http://rawgit.com/akottr/dragtable/master/dragtable.css">
-<!--Latest compiled and minified CSS -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">
-
-<!--&lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>
-
-<!--&lt;!&ndash; Latest compiled and minified Locales &ndash;&gt;-->
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/locale/bootstrap-table-zh-CN.min.js"></script>
-<script src="/static/js/django_auto_filter.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.css"/>
-<script src="http://rawgithub.com/akottr/dragtable/master/jquery.dragtable.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.js"></script>
 <script>
 $(function (){
-    //$('table').bootstrapTable();
+    $('table').bootstrapTable();
+    $('body').taggingAjax({});
+    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, d, f){
+      console.log("onEditableSave", event, rowIndex, rowArray, d ,f);
+      //var
+      $('body').taggingAjax("setTagForItem", rowArray[1], $(rowArray[25]).attr("objectId"),
+        $(rowArray[25]).attr("contentType"));
+    });
     $('table td:first-child').each(function(){
         $(this).html('<a href="{{admin_base_url}}'.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
     });

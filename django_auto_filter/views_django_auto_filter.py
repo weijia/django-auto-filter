@@ -13,8 +13,13 @@ import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
+from tagging_app.tagging_app_utils import get_tag_str_from_tag_list
 
 __author__ = 'weijia'
+
+
+def render_tags(self, value):
+    return get_tag_str_from_tag_list(value)
 
 
 class DjangoAutoFilter(TemplateView):
@@ -27,6 +32,22 @@ class DjangoAutoFilter(TemplateView):
     # Used by django-ajax-selects
     ajax_fields = {}
     # ajax_fields = {"relations": "ufs_obj", "parent": "ufs_obj", "descriptions": "description"}
+    # additional_col = {"tags":
+    #                       tables.Column(
+    # # #                       tables.TemplaColumn('''
+    # # # <span class="tagged-item editable editable-click"
+    # # #    {{ record|gen_tag_attr }}> {{ record.tags }}
+    # # # </span>
+    # # # ''',
+    #                                           attrs={'th': {"data-editable": "true"},
+    #             'td': {"objectId": "{{ record.id }}",  "tags": A("record.tags"), "contentType": 83}})}
+    additional_col = {"tags": tables.Column(attrs={'th': {"data-editable": "true"}}),
+                      "render_tags": render_tags,
+                      "row_info": tables.TemplateColumn('<span {{ record|gen_tag_attr }}> </span>',
+                                                        attrs={'th': {"style": "display:none"},
+                                                               "td": {"style": "display:none"}},
+                                                        ),
+                      }
 
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
@@ -48,13 +69,26 @@ class DjangoAutoFilter(TemplateView):
 
     def get_table_report_class(self):
         content_type = ContentType.objects.get_for_model(self.model_class)
-        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), {
-            "Meta": type("Meta", (), {"model": self.model_class}),
+        attr_dict = {
+            "Meta": type("Meta", (), {
+                "model": self.model_class,
+                "sequence": ["id", "tags"],
+                # "row_attrs": {
+                #     # 'data-id': lambda record: record.pk
+                #     "objectId": lambda record: record.pk,
+                #     "tags": lambda record: record.tags,
+                #     "content-type": lambda record: ContentType.objects.get_for_model(record).pk,
+                #     "data-name": "tags",
+                # }
+            }),
             # "edit": tables.Column(),
             # "render_edit":
             # "edit": tables.LinkColumn("admin:%s_%s_change" %
             #                           (content_type.app_label, content_type.model), args=[A('pk')])
-        })
+
+        }
+        attr_dict.update(self.additional_col)
+        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), attr_dict)
         return table_class
 
     def get_filter_class(self):
