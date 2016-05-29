@@ -5,31 +5,31 @@
 {% load gen_tag_attr %}
     {% block js %}
         {{ block.super }}
-<link rel="stylesheet" href="{% static 'css/django_auto_filter.css' %}">
-<link rel="stylesheet" href="http://rawgit.com/akottr/dragtable/master/dragtable.css">
-<!--Latest compiled and minified CSS -->
-<link rel="stylesheet" href="{% static 'js/bootstrap-table/dist/bootstrap-table.min.css' %}">
-<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">-->
+        <link rel="stylesheet" href="{% static 'css/django_auto_filter.css' %}">
+        <link rel="stylesheet" href="http://rawgit.com/akottr/dragtable/master/dragtable.css">
+        <!--Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="{% static 'js/bootstrap-table/dist/bootstrap-table.min.css' %}">
+        <!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.css">-->
 
-<!--&lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;-->
-<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>-->
+        <!--&lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;-->
+        <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/bootstrap-table.min.js"></script>-->
 
-<!--&lt;!&ndash; Latest compiled and minified Locales &ndash;&gt;-->
-<!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/locale/bootstrap-table-zh-CN.min.js"></script>-->
-<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
-<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-<script src="{% static 'js/bootstrap-table/dist/bootstrap-table.js'%}"></script>
-<script src="{% static 'csrf.js'%}"></script>
-<script src="{% static 'js/django_auto_filter.js' %}"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.css"/>
-<script src="http://rawgithub.com/akottr/dragtable/master/jquery.dragtable.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.js"></script>
-        {% include "tagging_app/tagging_head_inc.html" %}
-
+        <!--&lt;!&ndash; Latest compiled and minified Locales &ndash;&gt;-->
+        <!--<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.8.1/locale/bootstrap-table-zh-CN.min.js"></script>-->
+        <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+        <script src="{% static 'js/bootstrap-table/dist/bootstrap-table.js'%}"></script>
+        <script src="{% static 'csrf.js'%}"></script>
+        <script src="{% static 'js/django_auto_filter.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.css"/>
+        <script src="http://rawgithub.com/akottr/dragtable/master/jquery.dragtable.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.js"></script>
+        <script src="{% static 'js/tagging_ajax.js' %}" ></script>
+        <script src="{% static 'js/bootstrap-table/dist/extensions/editable/bootstrap-table-editable.js' %}"></script>
+        <!--<script type='text/javascript' src="{% static 'js/jquery-ui.js' %}"></script>-->
+        <!--<link rel='stylesheet' type='text/css' href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}" />-->
     {% endblock %}
 {% block content %}
-<!--<script type='text/javascript' src="{% static 'js/jquery-ui.js' %}"></script>-->
-<!--<link rel='stylesheet' type='text/css' href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}" />-->
 <form action="" method="get" class="form-inline">
     {% csrf_token %}
     {{ filter.form.media }}
