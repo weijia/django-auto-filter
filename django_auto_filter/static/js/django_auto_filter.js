@@ -12,11 +12,14 @@ $(document).ready( function () {
 //    $('table').bootstrapTable();
     $('table').bootstrapTable();
     $('body').taggingAjax({});
-    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, d, f){
-      console.log("onEditableSave", event, rowIndex, rowArray, d ,f);
+    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, editableElement){
+      console.log("onEditableSave", event, rowIndex, rowArray, editableElement);
       //var
       $('body').taggingAjax("setTagForItem", rowArray[1], $(rowArray[25]).attr("objectId"),
-        $(rowArray[25]).attr("contentType"));
+        $(rowArray[25]).attr("contentType"), function(){
+            editableElement.toggleClass("editable-unsaved")
+        });
+        return true;
     });
     $('table td:first-child').each(function(){
         $(this).html('<a href="{{admin_base_url}}'.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
