@@ -1,5 +1,4 @@
 $(document).ready( function () {
-    $('table').bootstrapTable();
 //    $('table').dragtable({
 //        dragHandle:'.th-inner'
 ////        dragaccept:'th-inner'
@@ -11,4 +10,18 @@ $(document).ready( function () {
 //        scrollX: true
 //    } );
 //    $('table').bootstrapTable();
-} );
+    $('table').bootstrapTable();
+    $('body').taggingAjax({});
+    $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, oldValue, editableElement){
+      console.log("onEditableSave", event, rowIndex, rowArray, editableElement);
+      //var
+      $('body').taggingAjax("setTagForItem", rowArray[1], $(rowArray[25]).attr("objectId"),
+        $(rowArray[25]).attr("contentType"), function(){
+            editableElement.toggleClass("editable-unsaved");
+        });
+        return true;
+    });
+    $('table td:first-child').each(function(){
+        $(this).html('<a href="{{admin_base_url}}'.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
+    });
+});

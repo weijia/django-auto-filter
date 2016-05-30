@@ -13,10 +13,13 @@ import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
-# from storage_management.models_managed_item import ManagedItem
-from storage_management.models_managed_item import ManagedItem
+from tagging_app.tagging_app_utils import get_tag_str_from_tag_list
 
 __author__ = 'weijia'
+
+
+def render_tags(self, value):
+    return get_tag_str_from_tag_list(value)
 
 
 class DjangoAutoFilter(TemplateView):
@@ -29,7 +32,25 @@ class DjangoAutoFilter(TemplateView):
     # Used by django-ajax-selects
     ajax_fields = {}
     # ajax_fields = {"relations": "ufs_obj", "parent": "ufs_obj", "descriptions": "description"}
-    item_per_page = 10
+    # additional_col = {"tags":
+    #                       tables.Column(
+    # # #                       tables.TemplaColumn('''
+    # # # <span class="tagged-item editable editable-click"
+    # # #    {{ record|gen_tag_attr }}> {{ record.tags }}
+    # # # </span>
+    # # # ''',
+    #                                           attrs={'th': {"data-editable": "true"},
+    #             'td': {"objectId": "{{ record.id }}",  "tags": A("record.tags"), "contentType": 83}})}
+    additional_col = {
+        # The following line make the column editable (work for x editable)
+        "tags": tables.Column(attrs={'th': {"data-editable": "true"}}),
+        "render_tags": render_tags,
+        "row_info": tables.TemplateColumn('<span {{ record|gen_tag_attr }}> </span>',
+                                          # Hide this column
+                                          attrs={'th': {"class": "hidden-column"},
+                                                 "td": {"class": "hidden-column"}},
+                                          ),
+    }
 
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
@@ -51,13 +72,26 @@ class DjangoAutoFilter(TemplateView):
 
     def get_table_report_class(self):
         content_type = ContentType.objects.get_for_model(self.model_class)
-        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), {
-            "Meta": type("Meta", (), {"model": self.model_class}),
+        attr_dict = {
+            "Meta": type("Meta", (), {
+                "model": self.model_class,
+                "sequence": ["id", "tags"],
+                # "row_attrs": {
+                #     # 'data-id': lambda record: record.pk
+                #     "objectId": lambda record: record.pk,
+                #     "tags": lambda record: record.tags,
+                #     "content-type": lambda record: ContentType.objects.get_for_model(record).pk,
+                #     "data-name": "tags",
+                # }
+            }),
             # "edit": tables.Column(),
             # "render_edit":
             # "edit": tables.LinkColumn("admin:%s_%s_change" %
             #                           (content_type.app_label, content_type.model), args=[A('pk')])
-        })
+
+        }
+        attr_dict.update(self.additional_col)
+        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), attr_dict)
         return table_class
 
     def get_filter_class(self):
@@ -101,18 +135,8 @@ class DjangoAutoFilter(TemplateView):
 
         f = self.get_filter_class()(self.request.GET, queryset=queryset)
 
-        filter_query_set = self.add_ajax_filter_to_query(f)
-
-        table = self.get_table_report_class()(filter_query_set)
-        # table.paginate(page=request.GET.get('page', 1), per_page=5)
-        # RequestConfig(request, paginate={"per_page": 5}).configure(table)
-        self.table_to_report = RequestConfig(self.request, paginate={"per_page": self.item_per_page}).configure(table)
-        admin_base_url = self.get_admin_url()
-        # return context.update({"table": table, "filter": f, "admin_base_url": admin_base_url})
-        return {"table": table, "filter": f, "admin_base_url": admin_base_url}
-
-    def add_ajax_filter_to_query(self, f):
         filter_query_set = f.qs
+
         for field in self.ajax_fields:
             if type(f.form.cleaned_data[field]) is list:
                 # Multiple selection field
@@ -126,7 +150,13 @@ class DjangoAutoFilter(TemplateView):
                     continue
                 exact_filter = {field: f.form.cleaned_data[field]}
             filter_query_set = filter_query_set.filter(**exact_filter)
-        return filter_query_set
+
+        table = self.get_table_report_class()(filter_query_set)
+        # table.paginate(page=request.GET.get('page', 1), per_page=5)
+        # RequestConfig(request, paginate={"per_page": 5}).configure(table)
+        self.table_to_report = RequestConfig(self.request, paginate={"per_page": 5}).configure(table)
+        admin_base_url = self.get_admin_url()
+        return {"table": table, "filter": f, "admin_base_url": admin_base_url}
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
