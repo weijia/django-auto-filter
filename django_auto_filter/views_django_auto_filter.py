@@ -55,6 +55,7 @@ class DjangoAutoFilter(TemplateView):
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
         # self.model_class = None
+        self.item_per_page = 5
         self.choice_fields = {}
         self.text_fields = {}
         self.table_to_report = None
@@ -135,8 +136,17 @@ class DjangoAutoFilter(TemplateView):
 
         f = self.get_filter_class()(self.request.GET, queryset=queryset)
 
-        filter_query_set = f.qs
+        filter_query_set = self.do_ajax_filter(f)
 
+        table = self.get_table_report_class()(filter_query_set)
+        # table.paginate(page=request.GET.get('page', 1), per_page=5)
+        # RequestConfig(request, paginate={"per_page": 5}).configure(table)
+        self.table_to_report = RequestConfig(self.request, paginate={"per_page": self.item_per_page}).configure(table)
+        admin_base_url = self.get_admin_url()
+        return {"table": table, "filter": f, "admin_base_url": admin_base_url}
+
+    def do_ajax_filter(self, f):
+        filter_query_set = f.qs
         for field in self.ajax_fields:
             if type(f.form.cleaned_data[field]) is list:
                 # Multiple selection field
@@ -150,13 +160,7 @@ class DjangoAutoFilter(TemplateView):
                     continue
                 exact_filter = {field: f.form.cleaned_data[field]}
             filter_query_set = filter_query_set.filter(**exact_filter)
-
-        table = self.get_table_report_class()(filter_query_set)
-        # table.paginate(page=request.GET.get('page', 1), per_page=5)
-        # RequestConfig(request, paginate={"per_page": 5}).configure(table)
-        self.table_to_report = RequestConfig(self.request, paginate={"per_page": 5}).configure(table)
-        admin_base_url = self.get_admin_url()
-        return {"table": table, "filter": f, "admin_base_url": admin_base_url}
+        return filter_query_set
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
