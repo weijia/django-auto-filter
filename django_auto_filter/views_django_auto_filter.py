@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core import urlresolvers
+from django.db import models
 from django.db.models import Q
 from django.views.generic import TemplateView
 import django_filters
@@ -29,6 +30,8 @@ class DjangoAutoFilter(TemplateView):
     # The following is also OK
     # filter_fields = ["username", ]
     edit_namespace = "admin"
+    is_exclude_field_types = True
+    default_exclude_fields = (models.ForeignKey, models.ManyToManyField, models.DateTimeField)
     # Used by django-ajax-selects
     ajax_fields = {}
     # ajax_fields = {"relations": "ufs_obj", "parent": "ufs_obj", "descriptions": "description"}
@@ -122,8 +125,19 @@ class DjangoAutoFilter(TemplateView):
             if attr.name not in self.ajax_fields:
                 if hasattr(attr, "choices") and len(attr.choices):
                     self.choice_fields[attr.name] = django_filters.MultipleChoiceFilter(choices=attr.choices)
-                else:
+                elif self.is_exclude_field_types:
+                    if type(attr) in self.get_excluded_field_types():
+                        continue
                     self.text_fields[attr.name] = ["icontains"]
+
+    def get_excluded_field_types(self):
+        excluded_types = list(self.default_exclude_fields)
+        try:
+            from mptt.models import TreeForeignKey
+            excluded_types.append(TreeForeignKey)
+        except ImportError:
+            pass
+        return excluded_types
 
     def set_ajax_form(self):
         self.ajax_form = make_ajax_form(self.model_class, self.ajax_fields, self.get_contains_all_keyword_form())
