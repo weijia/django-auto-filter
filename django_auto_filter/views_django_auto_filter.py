@@ -91,9 +91,16 @@ class DjangoAutoFilter(TemplateView):
             #                           (content_type.app_label, content_type.model), args=[A('pk')])
 
         }
-        attr_dict.update(self.additional_col)
+        if self.is_tag_exists():
+            attr_dict.update(self.additional_col)
         table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), attr_dict)
         return table_class
+
+    def is_tag_exists(self):
+        if hasattr(self.model_class.objects.all()[0], "tags"):
+            return True
+        else:
+            return False
 
     def get_filter_class(self):
         self.set_ajax_form()
