@@ -75,19 +75,21 @@ class DjangoAutoFilter(TemplateView):
         return '%d' % next(self.counter)
 
     def get_table_report_class(self):
-        content_type = ContentType.objects.get_for_model(self.model_class)
-        attr_dict = {
-            "Meta": type("Meta", (), {
-                "model": self.model_class,
-                "sequence": ["id", "tags"],
-                # "row_attrs": {
-                #     # 'data-id': lambda record: record.pk
-                #     "objectId": lambda record: record.pk,
-                #     "tags": lambda record: record.tags,
-                #     "content-type": lambda record: ContentType.objects.get_for_model(record).pk,
-                #     "data-name": "tags",
-                # }
-            }),
+        # content_type = ContentType.objects.get_for_model(self.model_class)
+        table_report_meta_attr_dict = {
+            "model": self.model_class,
+            # "row_attrs": {
+            #     # 'data-id': lambda record: record.pk
+            #     "objectId": lambda record: record.pk,
+            #     "tags": lambda record: record.tags,
+            #     "content-type": lambda record: ContentType.objects.get_for_model(record).pk,
+            #     "data-name": "tags",
+            # }
+        }
+        if self.is_tag_exists():
+            table_report_meta_attr_dict["sequence"] = ["id", "tags"]
+        table_report_attr_dict = {
+            "Meta": type("Meta", (), table_report_meta_attr_dict),
             # "edit": tables.Column(),
             # "render_edit":
             # "edit": tables.LinkColumn("admin:%s_%s_change" %
@@ -95,8 +97,8 @@ class DjangoAutoFilter(TemplateView):
 
         }
         if self.is_tag_exists():
-            attr_dict.update(self.additional_col)
-        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), attr_dict)
+            table_report_attr_dict.update(self.additional_col)
+        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), table_report_attr_dict)
         return table_class
 
     def is_tag_exists(self):
