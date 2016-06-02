@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core import urlresolvers
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, BooleanField, NullBooleanField
 from django.views.generic import TemplateView
 import django_filters
 from django_tables2_reports.tables import TableReport
@@ -130,7 +130,13 @@ class DjangoAutoFilter(TemplateView):
                 elif self.is_exclude_field_types:
                     if type(attr) in self.get_excluded_field_types():
                         continue
-                    self.text_fields[attr.name] = ["icontains"]
+                    if self.is_bool_field(attr):
+                        self.text_fields[attr.name] = ["exact"]
+                    else:
+                        self.text_fields[attr.name] = ["icontains"]
+
+    def is_bool_field(self, attr):
+        return type(attr) in [BooleanField, NullBooleanField]
 
     def get_excluded_field_types(self):
         excluded_types = list(self.default_exclude_fields)
