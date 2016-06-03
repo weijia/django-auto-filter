@@ -58,7 +58,7 @@ class DjangoAutoFilter(TemplateView):
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
         # self.model_class = None
-        self.item_per_page = 5
+        self.item_per_page = 10
         self.choice_fields = {}
         self.text_fields = {}
         self.table_to_report = None
