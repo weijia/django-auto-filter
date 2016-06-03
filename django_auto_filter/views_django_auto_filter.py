@@ -102,10 +102,11 @@ class DjangoAutoFilter(TemplateView):
         return table_class
 
     def is_tag_exists(self):
-        if hasattr(self.model_class.objects.all()[0], "tags"):
-            return True
-        else:
-            return False
+        all_objects = self.model_class.objects.all()
+        if all_objects.exists():
+            if hasattr(all_objects[0], "tags"):
+                return True
+        return False
 
     def get_filter_class(self):
         self.set_ajax_form()
@@ -130,7 +131,7 @@ class DjangoAutoFilter(TemplateView):
                 elif self.is_exclude_field_types:
                     if type(attr) in self.get_excluded_field_types():
                         continue
-                    if self.is_bool_field(attr):
+                    if self.is_bool_field(attr) or self.is_int_field(attr):
                         self.text_fields[attr.name] = ["exact"]
                     else:
                         self.text_fields[attr.name] = ["icontains"]
@@ -203,3 +204,7 @@ class DjangoAutoFilter(TemplateView):
         url = urlresolvers.reverse(url_name, args=("1",))
         url = url.replace("1", "%d")
         return url
+
+    def is_int_field(self, attr):
+        return type(attr) in [models.IntegerField, models.PositiveIntegerField, models.PositiveSmallIntegerField,
+                              models.SmallIntegerField, models.BigIntegerField]
