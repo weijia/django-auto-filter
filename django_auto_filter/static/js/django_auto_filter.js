@@ -22,6 +22,7 @@ $(document).ready( function () {
         return true;
     });
     $('table td:first-child').each(function(){
-        $(this).html('<a href="{{admin_base_url}}'.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
+        var hrefTagStart = '<a href="'+ admin_base_url;
+        $(this).html(hrefTagStart.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
     });
 });
