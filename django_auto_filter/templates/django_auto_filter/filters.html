@@ -28,10 +28,14 @@
         <script type="text/javascript" src="https://cdn.datatables.net/t/bs/dt-1.10.11,b-1.1.2,b-colvis-1.1.2/datatables.min.js"></script>
         <script src="{% static 'js/tagging_ajax.js' %}" ></script>
         <script src="{% static 'js/bootstrap-table/dist/extensions/editable/bootstrap-table-editable.js' %}"></script>
+        <script src="{% static 'js/bool_field.js' %}"></script>
+        <script src="{% static 'js/rest_api.js' %}"></script>
+        <script src="{% static 'csrf.js' %}"></script>
     {% endblock %}
 {% block content %}
 <script>
-  var admin_base_url = "{{admin_base_url}}";
+  var admin_base_url = "{{ admin_base_url }}";
+  var model_rest_api_url = "{{ model_rest_api_url }}";
 </script>
 <form action="" method="get" class="form-inline">
     {% csrf_token %}
