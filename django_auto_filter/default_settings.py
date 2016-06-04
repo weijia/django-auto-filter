@@ -1,8 +1,13 @@
 # import os
 #
-# INSTALLED_APPS += (
-#     'django.contrib.staticfiles',
-# )
+INSTALLED_APPS += (
+    'django.contrib.staticfiles',
+    'bootstrapform',
+    'django_tables2',
+    'django_tables2_reports',
+    'webmanager',
+    'django_auto_filter',
+)
 #
 # STATIC_URL = '/static/'
 

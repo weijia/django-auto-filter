@@ -26,10 +26,11 @@ def render_tags(self, value):
 class DjangoAutoFilter(TemplateView):
     template_name = 'django_auto_filter/filters.html'
     model_class = User
-    filter_fields = {"username": ["icontains"]}
+    # filter_fields = {"username": ["icontains"]}
     # The following is also OK
     # filter_fields = ["username", ]
     edit_namespace = "admin"
+    item_per_page = 10
     is_exclude_field_types = True
     default_exclude_fields = (models.ForeignKey, models.ManyToManyField, models.DateTimeField)
     # Used by django-ajax-selects
@@ -58,7 +59,6 @@ class DjangoAutoFilter(TemplateView):
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
         # self.model_class = None
-        self.item_per_page = 10
         self.choice_fields = {}
         self.text_fields = {}
         self.table_to_report = None

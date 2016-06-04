@@ -1,2 +1,10 @@
-django>=1.9.1
+# django>=1.9.1
 # Additional requirements go here
+django-bootstrap-form
+django-tables2
+# webmanager
+# https://github.com/weijia/webmanager
+# django-simplemenu
+# https://github.com/weijia/django-simplemenu
+# Optional
+xlwt
