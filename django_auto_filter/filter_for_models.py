@@ -15,7 +15,7 @@ def get_filter_urls(models, template_name=None):
     url_list = []
     for model in model_enumerator(models):
         param_dict = {"model_class": model}
-        if template_name is None:
+        if template_name is not None:
             param_dict["template_name"] = template_name
         url_list.append(url(r'^model/%s/' % class_name_to_low_case(model.__name__),
                             DjangoAutoFilter.as_view(**param_dict)))
