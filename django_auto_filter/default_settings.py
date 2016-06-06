@@ -23,6 +23,10 @@ REST_FRAMEWORK = {
     )
 }
 
+MIDDLEWARE_CLASSES += (
+    'reversion.middleware.RevisionMiddleware',
+)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
