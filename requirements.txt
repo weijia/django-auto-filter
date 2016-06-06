@@ -8,3 +8,4 @@ django-tables2
 # https://github.com/weijia/django-simplemenu
 # Optional
 xlwt
+django-bootstrap3
