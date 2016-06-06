@@ -1,21 +1,19 @@
 # import os
 #
 INSTALLED_APPS += (
-    'pagination',
+    'django.contrib.staticfiles',
+    'bootstrapform',
+    'django_tables2',
+    'django_tables2_reports',
+    'webmanager',
+    'django_auto_filter',
 )
-
-MIDDLEWARE_CLASSES += (
-    'pagination.middleware.PaginationMiddleware',
-)
+#
+# STATIC_URL = '/static/'
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.static',
     'django.core.context_processors.request',
-    "django.core.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request"
 )
 
 TEMPLATES = [

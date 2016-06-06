@@ -13,6 +13,7 @@ from django_tables2_reports.utils import create_report_http_response
 import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 
+from django_auto_filter.filter_utils import get_rest_api_url
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
 from tagging_app.tagging_app_utils import get_tag_str_from_tag_list
 
@@ -26,10 +27,11 @@ def render_tags(self, value):
 class DjangoAutoFilter(TemplateView):
     template_name = 'django_auto_filter/filters.html'
     model_class = User
-    filter_fields = {"username": ["icontains"]}
+    # filter_fields = {"username": ["icontains"]}
     # The following is also OK
     # filter_fields = ["username", ]
     edit_namespace = "admin"
+    item_per_page = 10
     is_exclude_field_types = True
     default_exclude_fields = (models.ForeignKey, models.ManyToManyField, models.DateTimeField)
     # Used by django-ajax-selects
@@ -58,7 +60,6 @@ class DjangoAutoFilter(TemplateView):
     def __init__(self, **kwargs):
         super(DjangoAutoFilter, self).__init__(**kwargs)
         # self.model_class = None
-        self.item_per_page = 10
         self.choice_fields = {}
         self.text_fields = {}
         self.table_to_report = None
@@ -173,7 +174,9 @@ class DjangoAutoFilter(TemplateView):
         # RequestConfig(request, paginate={"per_page": 5}).configure(table)
         self.table_to_report = RequestConfig(self.request, paginate={"per_page": self.item_per_page}).configure(table)
         admin_base_url = self.get_admin_url()
-        return {"table": table, "filter": f, "admin_base_url": admin_base_url}
+        model_rest_api_url = get_rest_api_url(self.model_class);
+        return {"table": table, "filter": f, "admin_base_url": admin_base_url,
+                "model_rest_api_url": model_rest_api_url}
 
     def do_ajax_filter(self, f):
         filter_query_set = f.qs
