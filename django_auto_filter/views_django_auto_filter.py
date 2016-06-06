@@ -130,19 +130,30 @@ class DjangoAutoFilter(TemplateView):
                 if hasattr(attr, "choices") and len(attr.choices):
                     self.choice_fields[attr.name] = django_filters.MultipleChoiceFilter(choices=attr.choices)
                 elif self.is_exclude_field_types:
-                    if type(attr) in self.get_excluded_field_types():
+                    if self.is_exclude_in_filter(attr):
                         continue
                     if self.is_bool_field(attr) or self.is_int_field(attr):
                         self.text_fields[attr.name] = ["exact"]
                     else:
                         self.text_fields[attr.name] = ["icontains"]
 
+    def is_exclude_in_filter(self, attr):
+        field_types = self.get_excluded_field_types()
+        if type(attr) in field_types:
+            return True
+        for field_type in field_types:
+            if issubclass(type(attr), field_type):
+                return True
+        return False
+
+    # noinspection PyMethodMayBeStatic
     def is_bool_field(self, attr):
         return type(attr) in [BooleanField, NullBooleanField]
 
     def get_excluded_field_types(self):
         excluded_types = list(self.default_exclude_fields)
         try:
+            # noinspection PyUnresolvedReferences
             from mptt.models import TreeForeignKey
             excluded_types.append(TreeForeignKey)
         except ImportError:
