@@ -10,7 +10,7 @@ $(document).ready( function () {
 //        scrollX: true
 //    } );
 //    $('table').bootstrapTable();
-    $('table').bootstrapTable();
+    $('table').bootstrapTable({reorderableColumns: true});
     $('body').taggingAjax({});
     $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, oldValue, editableElement){
       console.log("onEditableSave", event, rowIndex, rowArray, editableElement);

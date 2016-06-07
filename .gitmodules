@@ -1,3 +1,6 @@
 [submodule "django_auto_filter/static/js/bootstrap-table"]
 	path = django_auto_filter/static/js/bootstrap-table
 	url = https://github.com/wenzhixin/bootstrap-table.git
+[submodule "django_auto_filter/static/js/dragtable"]
+	path = django_auto_filter/static/js/dragtable
+	url = https://github.com/akottr/dragtable.git
