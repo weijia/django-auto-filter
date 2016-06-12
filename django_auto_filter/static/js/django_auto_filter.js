@@ -15,8 +15,11 @@ $(document).ready( function () {
     $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, oldValue, editableElement){
       console.log("onEditableSave", event, rowIndex, rowArray, editableElement);
       //var
-      $('body').taggingAjax("setTagForItem", rowArray[1], $(rowArray[25]).attr("objectId"),
-        $(rowArray[25]).attr("contentType"), function(){
+      var newTag = rowArray[1];
+      var infoElem = $("td.row_info span", $(editableElement.parents("tr")[0]));
+      var objectId = infoElem.attr("objectId");
+      var contentType = infoElem.attr("contentType");
+      $('body').taggingAjax("setTagForItem", newTag, objectId, contentType, function(){
             editableElement.toggleClass("editable-unsaved");
         });
         return true;
