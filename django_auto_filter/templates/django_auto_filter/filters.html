@@ -40,6 +40,7 @@
   var admin_base_url = "{{ admin_base_url }}";
   var model_rest_api_url = "{{ model_rest_api_url }}";
 </script>
+{% block filter_block %}
 <form action="" method="get" class="form-inline">
     {% csrf_token %}
     {{ filter.form.media }}
@@ -50,6 +51,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
+{% endblock %}
 <div class="scroll-table-container">
 {% render_table table %}
 </div>
