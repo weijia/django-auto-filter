@@ -7,6 +7,7 @@ INSTALLED_APPS += (
     'django_tables2_reports',
     'webmanager',
     'django_auto_filter',
+    'dynamic_preferences',
 )
 #
 # STATIC_URL = '/static/'
@@ -28,14 +29,7 @@ MIDDLEWARE_CLASSES += (
     'reversion.middleware.RevisionMiddleware',
 )
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            # insert your TEMPLATE_DIRS here
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
+TEMPLATES[0]['OPTIONS'].update({
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
@@ -48,8 +42,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.core.context_processors.request',
             ],
-        },
-    },
-]
+    })
 
 # STATIC_ROOT = os.path.join('D:\\work\\codes\\new_base\\', 'static')
