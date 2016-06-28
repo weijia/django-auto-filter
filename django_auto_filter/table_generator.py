@@ -8,7 +8,7 @@ def render_tags(self, value):
 
 
 class TableGenerator(object):
-    additional_col = {
+    tag_cols = {
         # The following line make the column editable (work for x editable)
         "tags": tables.Column(attrs={'th': {"data-editable": "true"}}),
         "render_tags": render_tags,
@@ -22,6 +22,7 @@ class TableGenerator(object):
     def __init__(self, model_class):
         super(TableGenerator, self).__init__()
         self.model_class = model_class
+        self.additional_column = None
 
     def get_table_from_queryset(self, queryset):
         return self.get_table_report_class()(queryset)
@@ -57,7 +58,11 @@ class TableGenerator(object):
 
         }
         if self.is_tag_exists():
-            table_report_attr_dict.update(self.additional_col)
+            table_report_attr_dict.update(self.tag_cols)
+
+        if self.additional_column:
+            table_report_attr_dict.update(self.additional_column)
+
         table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), table_report_attr_dict)
         return table_class
 
