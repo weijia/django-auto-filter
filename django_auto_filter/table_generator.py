@@ -22,49 +22,41 @@ class TableGenerator(object):
     def __init__(self, model_class):
         super(TableGenerator, self).__init__()
         self.model_class = model_class
+        self.report_meta_attr_dict = {
+            "model": self.model_class,
+        }
         self.additional_column = None
+        self.report_attr_dict = None
+        self.exclude = None
 
     def get_table_from_queryset(self, queryset):
         return self.get_table_report_class()(queryset)
 
     def get_table_for_all(self):
-        return self.get_table_report_class()(self.model_class.objects.all())
+        return self.get_table_report_class()(self.model_class.objects.all(), exclude=self.exclude)
 
     def get_table_report_class(self):
         # content_type = ContentType.objects.get_for_model(self.model_class)
-        table_report_meta_attr_dict = {
-            "model": self.model_class,
-            # "row_attrs": {
-            #     # 'data-id': lambda record: record.pk
-            #     "objectId": lambda record: record.pk,
-            #     "tags": lambda record: record.tags,
-            #     "content-type": lambda record: ContentType.objects.get_for_model(record).pk,
-            #     "data-name": "tags",
-            # }
+        if self.is_tag_exists():
+            self.add_tag_column()
+        self.report_attr_dict = {
+            "Meta": type("Meta", (), self.report_meta_attr_dict),
         }
         if self.is_tag_exists():
-            table_report_meta_attr_dict["sequence"] = ["id", "tags"]
-            table_report_meta_attr_dict["attrs"] = {
-                # "data-show-toggle": "true",
-                "data-show-columns": "true"
-            }
-        table_report_attr_dict = {
-            "Meta": type("Meta", (), table_report_meta_attr_dict),
-
-            # "edit": tables.Column(),
-            # "render_edit":
-            # "edit": tables.LinkColumn("admin:%s_%s_change" %
-            #                           (content_type.app_label, content_type.model), args=[A('pk')])
-
-        }
-        if self.is_tag_exists():
-            table_report_attr_dict.update(self.tag_cols)
+            self.report_attr_dict.update(self.tag_cols)
 
         if self.additional_column:
-            table_report_attr_dict.update(self.additional_column)
+            self.report_attr_dict.update(self.additional_column)
 
-        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), table_report_attr_dict)
+        table_class = type(self.model_class.__name__ + "AutoTable", (TableReport,), self.report_attr_dict)
         return table_class
+
+    def add_tag_column(self):
+        self.report_meta_attr_dict["sequence"] = ["id", "tags"]
+        self.report_meta_attr_dict["attrs"] = {
+            # "data-show-toggle": "true",
+            "data-show-columns": "true"
+        }
 
     def is_tag_exists(self):
         all_objects = self.model_class.objects.all()

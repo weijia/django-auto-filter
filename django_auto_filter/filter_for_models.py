@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
 
 from djangoautoconf.model_utils.model_attr_utils import model_enumerator
 from ufs_tools.string_tools import class_name_to_low_case
@@ -18,7 +19,7 @@ def get_filter_urls(models, template_name=None):
         if template_name is not None:
             param_dict["template_name"] = template_name
         url_list.append(url(r'^model/%s/' % class_name_to_low_case(model.__name__),
-                            DjangoAutoFilter.as_view(**param_dict)))
+                            login_required(DjangoAutoFilter.as_view(**param_dict))))
 
     p = patterns('', *url_list)
     return p
