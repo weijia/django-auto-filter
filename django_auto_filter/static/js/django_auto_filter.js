@@ -26,6 +26,6 @@ $(document).ready( function () {
     });
     $('table td:first-child').each(function(){
         var hrefTagStart = '<a href="'+ admin_base_url;
-        $(this).html(hrefTagStart.replace('%d', $(this).text())+'">'+$(this).text()+'</a>');
+        $(this).html(hrefTagStart.replace('%d', $(this).text())+'" target="_blank">'+$(this).text()+'</a>');
     });
 });
