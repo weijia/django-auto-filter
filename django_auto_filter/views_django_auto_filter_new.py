@@ -26,6 +26,7 @@ class DjangoAutoFilterNew(TemplateView):
     # filter_fields = ["username", ]
     edit_namespace = "admin"
     item_per_page = 10
+    url_name = None
     # Used by django-ajax-selects
     # ajax_fields = {"relations": "ufs_obj", "parent": "ufs_obj", "descriptions": "description"}
     # additional_col = {"tags":
@@ -64,7 +65,10 @@ class DjangoAutoFilterNew(TemplateView):
 
     def get_admin_url(self):
         content_type = ContentType.objects.get_for_model(self.model)
-        url_name = "%s:%s_%s_change" % (self.edit_namespace, content_type.app_label, content_type.model)
+        if self.url_name is None:
+            url_name = "%s:%s_%s_change" % (self.edit_namespace, content_type.app_label, content_type.model)
+        else:
+            url_name = "%s:%s" % (self.edit_namespace, self.url_name)
         url = urlresolvers.reverse(url_name, args=("1",))
         url = url.replace("1", "%d")
         return url
