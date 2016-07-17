@@ -19,7 +19,7 @@ class TableGenerator(object):
                                           ),
     }
 
-    def __init__(self, model_class):
+    def __init__(self, model_class, prefix=None):
         super(TableGenerator, self).__init__()
         self.model_class = model_class
         self.report_meta_attr_dict = {
@@ -28,12 +28,18 @@ class TableGenerator(object):
         self.additional_column = None
         self.report_attr_dict = None
         self.exclude = None
+        self.prefix = prefix
 
     def get_table_from_queryset(self, queryset):
-        return self.get_table_report_class()(queryset)
+        table_create_dict = {"data": queryset}
+        if self.prefix is not None:
+            table_create_dict["prefix"] = self.prefix
+        if self.exclude is not None:
+            table_create_dict["exclude"] = self.exclude
+        return self.get_table_report_class()(**table_create_dict)
 
     def get_table_for_all(self):
-        return self.get_table_report_class()(self.model_class.objects.all(), exclude=self.exclude)
+        return self.get_table_from_queryset(self.model_class.objects.all())
 
     def get_table_report_class(self):
         # content_type = ContentType.objects.get_for_model(self.model_class)
