@@ -45,6 +45,7 @@ class TableGenerator(object):
         # content_type = ContentType.objects.get_for_model(self.model_class)
         if self.is_tag_exists():
             self.add_tag_column()
+        self.add_column_selector()
         self.report_attr_dict = {
             "Meta": type("Meta", (), self.report_meta_attr_dict),
         }
@@ -59,6 +60,9 @@ class TableGenerator(object):
 
     def add_tag_column(self):
         self.report_meta_attr_dict["sequence"] = ["id", "tags"]
+
+
+    def add_column_selector(self):
         self.report_meta_attr_dict["attrs"] = {
             # "data-show-toggle": "true",
             "data-show-columns": "true"

@@ -89,10 +89,10 @@ class DjangoAutoFilter(TemplateView):
         }
         if self.is_tag_exists():
             table_report_meta_attr_dict["sequence"] = ["id", "tags"]
-            table_report_meta_attr_dict["attrs"] = {
-                # "data-show-toggle": "true",
-                "data-show-columns": "true"
-            }
+        table_report_meta_attr_dict["attrs"] = {
+            # "data-show-toggle": "true",
+            "data-show-columns": "true"
+        }
         table_report_attr_dict = {
             "Meta": type("Meta", (), table_report_meta_attr_dict),
 
