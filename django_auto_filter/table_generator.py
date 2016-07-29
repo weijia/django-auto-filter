@@ -61,7 +61,6 @@ class TableGenerator(object):
     def add_tag_column(self):
         self.report_meta_attr_dict["sequence"] = ["id", "tags"]
 
-
     def add_column_selector(self):
         self.report_meta_attr_dict["attrs"] = {
             # "data-show-toggle": "true",

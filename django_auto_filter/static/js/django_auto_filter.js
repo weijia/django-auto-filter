@@ -11,6 +11,10 @@ $(document).ready( function () {
 //    } );
 //    $('table').bootstrapTable();
     $('table').bootstrapTable({reorderableColumns: true});
+    $('table').on("column-switch.bs.table", function(arg1, arg2, arg3, arg4,arg5,arg6){
+        console.log(arg1,arg2,arg3,arg4,arg5,arg6);
+    });
+
     $('body').taggingAjax({});
     $('table').on('editable-save.bs.table', function(event, rowIndex, rowArray, oldValue, editableElement){
       console.log("onEditableSave", event, rowIndex, rowArray, editableElement);
