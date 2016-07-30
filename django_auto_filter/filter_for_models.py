@@ -9,7 +9,7 @@ from ufs_tools.string_tools import class_name_to_low_case
 def add_filter_to_url_for(urlpatterns, models):
     for model in model_enumerator(models):
         urlpatterns += patterns('', url(r'^models/%s/' % class_name_to_low_case(model.__name__),
-                                        DjangoAutoFilterNew.as_view(model_class=model)))
+                                        DjangoAutoFilterNew.as_view(model=model)))
 
 
 def get_filter_urls(models, template_name=None):
