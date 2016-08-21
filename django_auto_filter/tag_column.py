@@ -16,12 +16,10 @@ class TagColumn(object):
 
 
 class RowInfoColumn(TableGeneratorColumn):
-    def __init__(self):
-        super(RowInfoColumn, self).__init__()
-        self.column_title = "row_info"
-        self.attrs = {'th': {"class": "hidden-column"},
-                      "td": {"class": "hidden-column"}}
-        self.column_content_template = '<span {{ record|gen_tag_attr }}> </span>'
+    column_content_template = '<span {{ record|gen_tag_attr }}> </span>'
+    column_title = "row_info"
+    attributes = {'th': {"class": "hidden-column"},
+                           "td": {"class": "hidden-column"}}
 
 
 class TagRender(object):
