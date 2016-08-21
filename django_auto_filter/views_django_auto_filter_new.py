@@ -27,6 +27,7 @@ class DjangoAutoFilterNew(TemplateView):
     edit_namespace = "admin"
     item_per_page = 10
     url_name = None
+
     # Used by django-ajax-selects
     # ajax_fields = {"relations": "ufs_obj", "parent": "ufs_obj", "descriptions": "description"}
     # additional_col = {"tags":
@@ -53,8 +54,8 @@ class DjangoAutoFilterNew(TemplateView):
 
         self.table_to_report = RequestConfig(self.request, paginate={"per_page": self.item_per_page}).configure(table)
         context.update({"table": table, "filter": (filter_generator.get_filter_instance(self.request.GET)),
-                                  "admin_base_url": self.get_admin_url(),
-                                  "model_rest_api_url": (get_rest_api_url(self.model))})
+                        "admin_base_url": self.get_admin_url(),
+                        "model_rest_api_url": (get_rest_api_url(self.model))})
         return context
 
     def get(self, request, *args, **kwargs):
@@ -72,5 +73,3 @@ class DjangoAutoFilterNew(TemplateView):
         url = urlresolvers.reverse(url_name, args=("1",))
         url = url.replace("1", "%d")
         return url
-
-

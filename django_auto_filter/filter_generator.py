@@ -3,6 +3,8 @@ from ajax_select import make_ajax_form
 from django import forms
 from django.db.models import Q, BooleanField, NullBooleanField
 from django.db import models
+
+from djangoautoconf.ajax_select_utils.ajax_select_channel_generator import get_fields_with_icontains_filter
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,13 +19,13 @@ def is_bool_field(attr):
 
 
 class FilterGenerator(object):
-    def __init__(self, model_class):
+    def __init__(self, model_class, keyword_filter_fields=None):
         self.text_fields = {}
         super(FilterGenerator, self).__init__()
         self.model_class = model_class
         self.choice_fields = {}
         self.ajax_form = None
-        self.keyword_filter_fields = []
+        self.keyword_filter_fields = keyword_filter_fields or get_fields_with_icontains_filter(model_class)
         # self.keyword_filter_fields = ['username', ]
         self.filter_instance = None
         self.ajax_fields = {}
@@ -41,8 +43,10 @@ class FilterGenerator(object):
         if keyword_form.is_valid():
             keywords = keyword_form.cleaned_data["keywords"]
             for single_keyword in keywords.split(","):
+                if single_keyword == "":
+                    continue
                 for keyword_filter_field in self.keyword_filter_fields:
-                    keyword_filter = {keyword_filter_field: single_keyword}
+                    keyword_filter = {"%s__icontains" % keyword_filter_field: single_keyword}
                     query &= Q(**keyword_filter)
             queryset = self.model_class.objects.filter(query)
         else:
