@@ -5,6 +5,7 @@ from django.db.models import Q, BooleanField, NullBooleanField
 from django.db import models
 
 from djangoautoconf.ajax_select_utils.ajax_select_channel_generator import get_fields_with_icontains_filter
+from djangoautoconf.ajax_select_utils.channel_creator_for_model import get_ajax_config_for_relation_fields
 from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
 from django.utils.translation import ugettext_lazy as _
 
@@ -55,6 +56,7 @@ class FilterGenerator(object):
         return filter_instance
 
     def set_ajax_form(self):
+        self.ajax_fields = get_ajax_config_for_relation_fields(self.model_class)
         self.ajax_form = make_ajax_form(self.model_class, self.ajax_fields, self.get_contains_all_keyword_form())
         for field in self.ajax_form.declared_fields:
             self.ajax_form.declared_fields[field].required = False
