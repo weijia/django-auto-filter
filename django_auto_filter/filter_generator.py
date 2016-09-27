@@ -33,6 +33,23 @@ class FilterGenerator(object):
         self.is_exclude_field_types = True
         self.default_exclude_fields = (models.ForeignKey, models.ManyToManyField, models.DateTimeField)
 
+    def get_query_set(self, get_param):
+        filter_query_set = self.get_filter_instance(get_param).qs
+        for field in self.ajax_fields:
+            if type(self.filter_instance.form.cleaned_data[field]) is list:
+                # Multiple selection field
+                if len(self.filter_instance.form.cleaned_data[field]) > 0:
+                    exact_filter = {"%s__in" % field: self.filter_instance.form.cleaned_data[field]}
+                else:
+                    continue
+            else:
+                # Single select field
+                if self.filter_instance.form.cleaned_data[field] is None:
+                    continue
+                exact_filter = {field: self.filter_instance.form.cleaned_data[field]}
+            filter_query_set = filter_query_set.filter(**exact_filter)
+        return filter_query_set
+
     def get_filter_instance(self, get_param):
         if self.filter_instance is None:
             self.filter_instance = self._get_filter_instance(get_param)
@@ -117,24 +134,10 @@ class FilterGenerator(object):
 
     def get_contains_all_keyword_form(self):
         form_class = type(self.model_class.__name__ + "ContainAllKeywordForm", (forms.ModelForm,), {
-            "Meta": type("Meta", (), {"model": self.model_class, "fields": []}),
+            "Meta": type("Meta", (), {"model": self.model_class,
+                                      "exclude": []
+                                      # "fields": []
+                                      }),
             "keywords": forms.CharField(required=False),
         })
         return form_class
-
-    def get_query_set(self, get_param):
-        filter_query_set = self.get_filter_instance(get_param).qs
-        for field in self.ajax_fields:
-            if type(self.filter_instance.form.cleaned_data[field]) is list:
-                # Multiple selection field
-                if len(self.filter_instance.form.cleaned_data[field]) > 0:
-                    exact_filter = {"%s__in" % field: self.filter_instance.form.cleaned_data[field]}
-                else:
-                    continue
-            else:
-                # Single select field
-                if self.filter_instance.form.cleaned_data[field] is None:
-                    continue
-                exact_filter = {field: self.filter_instance.form.cleaned_data[field]}
-            filter_query_set = filter_query_set.filter(**exact_filter)
-        return filter_query_set

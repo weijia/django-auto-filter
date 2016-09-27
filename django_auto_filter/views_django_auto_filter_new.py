@@ -28,18 +28,6 @@ class DjangoAutoFilterNew(TemplateView):
     item_per_page = 10
     url_name = None
 
-    # Used by django-ajax-selects
-    # ajax_fields = {"relations": "ufs_obj", "parent": "ufs_obj", "descriptions": "description"}
-    # additional_col = {"tags":
-    #                       tables.Column(
-    # # #                       tables.TemplaColumn('''
-    # # # <span class="tagged-item editable editable-click"
-    # # #    {{ record|gen_tag_attr }}> {{ record.tags }}
-    # # # </span>
-    # # # ''',
-    #                                           attrs={'th': {"data-editable": "true"},
-    #             'td': {"objectId": "{{ record.id }}",  "tags": A("record.tags"), "contentType": 83}})}
-
     def __init__(self, **kwargs):
         super(DjangoAutoFilterNew, self).__init__(**kwargs)
         self.table_to_report = None
