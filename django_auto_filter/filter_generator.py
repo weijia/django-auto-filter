@@ -19,7 +19,7 @@ def is_bool_field(attr):
     return type(attr) in [BooleanField, NullBooleanField]
 
 
-def is_icontain_field(attr):
+def is_icontains_field(attr):
     return type(attr) in (models.TextField, models.CharField, models.IntegerField)
 
 
@@ -74,6 +74,9 @@ class FilterGenerator(object):
         else:
             queryset = self.model_class.objects.all()
         filter_instance = self.get_filter_class()(get_param, queryset=queryset)
+        filter_form = filter_instance.form
+        for field in filter_form.fields:
+            filter_form.fields[field].required = False
         return filter_instance
 
     def set_ajax_form(self):
@@ -81,6 +84,8 @@ class FilterGenerator(object):
         self.ajax_form = make_ajax_form(self.model_class, self.ajax_fields, self.get_contains_all_keyword_form())
         for field in self.ajax_form.declared_fields:
             self.ajax_form.declared_fields[field].required = False
+        for field_name in self.ajax_form.base_fields:
+            self.ajax_form.base_fields[field_name].required = False
 
     def set_fields(self):
         for attr in enum_model_fields(self.model_class):
@@ -92,8 +97,10 @@ class FilterGenerator(object):
                         continue
                     if is_bool_field(attr) or is_int_field(attr):
                         self.text_fields[attr.name] = ["exact"]
-                    elif is_icontain_field(attr):
+                        # self.text_fields[attr.name].required = False
+                    elif is_icontains_field(attr):
                         self.text_fields[attr.name] = ["icontains"]
+                        # self.text_fields[attr.name].required = False
 
     def get_filter_class(self):
         self.set_ajax_form()
@@ -112,9 +119,13 @@ class FilterGenerator(object):
 
     def get_contains_all_keyword_form(self):
         form_class = type(self.model_class.__name__ + "ContainAllKeywordForm", (forms.ModelForm,), {
-            "Meta": type("Meta", (), {"model": self.model_class, "fields": []}),
-            _("keywords"): forms.CharField(required=False),
+            "Meta": type("Meta", (), {"model": self.model_class,
+                                      "exclude": []
+                                      # "fields": []
+                                      }),
+            "keywords": forms.CharField(required=False),
         })
+        # for field in form_class.fields
         return form_class
 
     def is_exclude_in_filter(self, attr):
@@ -135,13 +146,3 @@ class FilterGenerator(object):
         except ImportError:
             pass
         return excluded_types
-
-    def get_contains_all_keyword_form(self):
-        form_class = type(self.model_class.__name__ + "ContainAllKeywordForm", (forms.ModelForm,), {
-            "Meta": type("Meta", (), {"model": self.model_class,
-                                      "exclude": []
-                                      # "fields": []
-                                      }),
-            "keywords": forms.CharField(required=False),
-        })
-        return form_class
