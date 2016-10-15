@@ -19,6 +19,10 @@ def is_bool_field(attr):
     return type(attr) in [BooleanField, NullBooleanField]
 
 
+def is_icontain_field(attr):
+    return type(attr) in (models.TextField, models.CharField, models.IntegerField)
+
+
 class FilterGenerator(object):
     def __init__(self, model_class, keyword_filter_fields=None):
         self.text_fields = {}
@@ -88,7 +92,7 @@ class FilterGenerator(object):
                         continue
                     if is_bool_field(attr) or is_int_field(attr):
                         self.text_fields[attr.name] = ["exact"]
-                    else:
+                    elif is_icontain_field(attr):
                         self.text_fields[attr.name] = ["icontains"]
 
     def get_filter_class(self):
