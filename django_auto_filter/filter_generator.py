@@ -126,6 +126,9 @@ class FilterGenerator(object):
             "keywords": forms.CharField(required=False),
         })
         # for field in form_class.fields
+        # TODO: Mark all field as optional for form fields
+        for field in form_class.base_fields:
+            form_class.base_fields[field].required = False
         return form_class
 
     def is_exclude_in_filter(self, attr):
