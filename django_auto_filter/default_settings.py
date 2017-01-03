@@ -8,6 +8,7 @@ INSTALLED_APPS += (
     'webmanager',
     'django_auto_filter',
     'dynamic_preferences',
+    'ajax_select',
 )
 #
 # STATIC_URL = '/static/'
