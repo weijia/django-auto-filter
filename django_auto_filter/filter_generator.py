@@ -6,7 +6,7 @@ from django.db import models
 
 from djangoautoconf.ajax_select_utils.ajax_select_channel_generator import get_fields_with_icontains_filter
 from djangoautoconf.ajax_select_utils.channel_creator_for_model import get_ajax_config_for_relation_fields
-from djangoautoconf.model_utils.model_attr_utils import enum_model_fields
+from djangoautoconf.model_utils.model_attr_utils import enum_model_fields, get_verbose_name
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -149,3 +149,9 @@ class FilterGenerator(object):
         except ImportError:
             pass
         return excluded_types
+
+    def get_keyword_filtering_fields(self):
+        fields = []
+        for field in self.keyword_filter_fields:
+            fields.append(get_verbose_name(self.model_class, field))
+        return fields

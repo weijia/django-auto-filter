@@ -41,9 +41,12 @@ class DjangoAutoFilter(TemplateView):
         table = table_generator.get_table_from_queryset(filter_generator.get_query_set(self.request.GET))
 
         self.table_to_report = RequestConfig(self.request, paginate={"per_page": self.item_per_page}).configure(table)
+
         context.update({"table": table, "filter": (filter_generator.get_filter_instance(self.request.GET)),
                         "admin_base_url": self.get_admin_url(),
-                        "model_rest_api_url": (get_rest_api_url(self.model))})
+                        "model_rest_api_url": (get_rest_api_url(self.model)),
+                        "keyword_fields": filter_generator.get_keyword_filtering_fields(),
+                        })
         return context
 
     def get(self, request, *args, **kwargs):

@@ -33,4 +33,6 @@ $(document).ready( function () {
         $(this).html(hrefTagStart.replace('%d', $(this).text())+'" target="_blank">'+$(this).text()+'</a>');
     });
     $("#id_keywords").parent().parent().prependTo("#auto-filter-form");
+    $("#id_keywords").attr("placeholder", $("#auto-filter-form").attr("keyword_placeholder"));
+    $("#id_keywords").css("width", "1000px");
 });

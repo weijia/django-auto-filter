@@ -41,7 +41,8 @@
   var model_rest_api_url = "{{ model_rest_api_url }}";
 </script>
 {% block filter_block %}
-<form action="" method="get" class="form-inline" id="auto-filter-form">
+<form action="" method="get" class="form-inline" id="auto-filter-form"
+      keyword_placeholder="{{ keyword_fields|join:' / ' }}">
     {% csrf_token %}
     {{ filter.form.media }}
     <legend>{% trans 'Filter:'%}</legend>
