@@ -69,7 +69,7 @@ class FilterGenerator(object):
                     continue
                 for keyword_filter_field in self.keyword_filter_fields:
                     keyword_filter = {"%s__icontains" % keyword_filter_field: single_keyword}
-                    query &= Q(**keyword_filter)
+                    query |= Q(**keyword_filter)
             queryset = self.model_class.objects.filter(query)
         else:
             queryset = self.model_class.objects.all()
