@@ -32,4 +32,5 @@ $(document).ready( function () {
         var hrefTagStart = '<a href="'+ admin_base_url;
         $(this).html(hrefTagStart.replace('%d', $(this).text())+'" target="_blank">'+$(this).text()+'</a>');
     });
+    $("#id_keywords").parent().parent().prependTo("#auto-filter-form");
 });
