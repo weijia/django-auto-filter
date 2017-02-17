@@ -9,7 +9,7 @@ def render_tags(self, value):
     return get_tag_str_from_tag_list(value)
 
 
-class   TableGenerator(object):
+class TableGenerator(object):
     def __init__(self, model_class, prefix=None):
         super(TableGenerator, self).__init__()
         self.model_class = model_class

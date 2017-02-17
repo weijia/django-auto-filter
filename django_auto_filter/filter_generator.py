@@ -91,7 +91,11 @@ class FilterGenerator(object):
         for attr in enum_model_fields(self.model_class):
             if attr.name not in self.ajax_fields:
                 if hasattr(attr, "choices") and len(attr.choices):
-                    self.choice_fields[attr.name] = django_filters.MultipleChoiceFilter(choices=attr.choices)
+                    self.choice_fields[attr.name] = django_filters.MultipleChoiceFilter(
+                        choices=attr.choices,
+                        # lookup_expr='in',
+                        # widget=forms.CheckboxSelectMultiple(attrs={'class' : 'myfieldclass'})
+                    )
                 elif self.is_exclude_field_types:
                     if self.is_exclude_in_filter(attr):
                         continue
@@ -118,11 +122,13 @@ class FilterGenerator(object):
         return filter_class
 
     def get_contains_all_keyword_form(self):
-        form_class = type(self.model_class.__name__ + "ContainAllKeywordForm", (forms.ModelForm,), {
-            "Meta": type("Meta", (), {"model": self.model_class,
-                                      "exclude": []
-                                      # "fields": []
-                                      }),
+        form_class = type(self.model_class.__name__ + "ContainAllKeywordForm", (forms.Form,), {
+            "Meta": type("Meta", (), {
+                # "model": self.model_class,
+                # "exclude": []
+                # "exclude": ["source",]
+                # "fields": []
+            }),
             "keywords": forms.CharField(required=False),
         })
         # for field in form_class.fields
