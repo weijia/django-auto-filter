@@ -30,8 +30,7 @@ MIDDLEWARE_CLASSES += (
     'reversion.middleware.RevisionMiddleware',
 )
 
-TEMPLATES[0]['OPTIONS'].update({
-            'context_processors': [
+TEMPLATES[0]['OPTIONS']['context_processors'].extend([
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
                 'django.contrib.auth.context_processors.auth',
@@ -42,7 +41,6 @@ TEMPLATES[0]['OPTIONS'].update({
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'django.core.context_processors.request',
-            ],
-    })
+            ])
 
 # STATIC_ROOT = os.path.join('D:\\work\\codes\\new_base\\', 'static')
