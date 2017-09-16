@@ -4,11 +4,31 @@
 
 {% block pagination %}
   {{ block.super }}
-  {% block pagination.allpages %}
-    {% for p in table.paginator.page_range %}
-      <a href="{% querystring table.prefixed_page_field=p %}">{{ p }}</a>
-    {% endfor %}
-  {% endblock pagination.allpages %}
+  {% with current_page=table.page.number page_count=table.paginator.num_pages rows_per_page=table.page.object_list|length total_rows=table.page.paginator.count %}
+    <ul class="pagination">
+    {% block pagination.allpages %}
+        <li class="current">
+            {% blocktrans %}Page {% endblocktrans %}
+        </li>
+        {% for page in table.paginator.page_range %}
+            {% with range_start=current_page|add:"-3" range_end=current_page|add:"3" page_count_minus_5=page_count|add:"-5" page_count_minus_1=page_count|add:"-1" %}
+                {% if page == current_page %}
+                    <li class="active">
+                        <span>{{ page }}</span>
+                    </li>
+                {% elif page == 1 or page >= range_start and page <= range_end or page == page_count %}
+                    <li class="next">
+                        <a href="{% querystring table.prefixed_page_field=page %}">{{ page }}</a>
+                    </li>
+                {% endif %}
+                {% if page == 1 and current_page > 5 or pagina == page_count_minus_1 and current_page <= page_count_minus_5 %}
+                    <li class="current">...</li>
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    {% endblock pagination.allpages %}
+    </ul>
+  {% endwith %}
 {% endblock pagination %}
 
 
