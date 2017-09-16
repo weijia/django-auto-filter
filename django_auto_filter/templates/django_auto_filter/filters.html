@@ -36,24 +36,24 @@
         <script src="{% static 'js/rest_api.js' %}"></script>
     {% endblock %}
 {% block content %}
-<script>
-  var admin_base_url = "{{ admin_base_url }}";
-  var model_rest_api_url = "{{ model_rest_api_url }}";
-</script>
-{% block filter_block %}
-<form action="" method="get" class="form-inline" id="auto-filter-form"
-      keyword_placeholder="{{ keyword_fields|join:' / ' }}">
-    {% csrf_token %}
-    {{ filter.form.media }}
-    <legend>{% trans 'Filter:'%}</legend>
-    {{ filter.form|bootstrap}}<br/><br/>
-    <div class="form-group">
-        <!--<input type="submit" />-->
-        <button type="submit" class="btn btn-primary">{% trans 'Search' %}</button>
-    </div>
-</form>
-{% endblock %}
-<div class="scroll-table-container">
-{% render_table table %}
-</div>
+  <script>
+    var admin_base_url = "{{ admin_base_url }}";
+    var model_rest_api_url = "{{ model_rest_api_url }}";
+  </script>
+  {% block filter_block %}
+  <form action="" method="get" class="form-inline" id="auto-filter-form"
+        keyword_placeholder="{{ keyword_fields|join:' / ' }}">
+      {% csrf_token %}
+      {{ filter.form.media }}
+      <legend>{% trans 'Filter:'%}</legend>
+      {{ filter.form|bootstrap}}<br/><br/>
+      <div class="form-group">
+          <!--<input type="submit" />-->
+          <button type="submit" class="btn btn-primary">{% trans 'Search' %}</button>
+      </div>
+  </form>
+  {% endblock %}
+  <div class="scroll-table-container">
+  {% render_table table 'django_auto_filter/table.html' %}
+  </div>
 {% endblock %}

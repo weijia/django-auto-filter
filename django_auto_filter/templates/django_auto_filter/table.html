@@ -1,0 +1,14 @@
+{% extends "django_tables2_reports/table.html" %}
+{% load django_tables2 %}
+{% load i18n %}
+
+{% block pagination %}
+  {{ block.super }}
+  {% block pagination.allpages %}
+    {% for p in table.paginator.page_range %}
+      <a href="{% querystring table.prefixed_page_field=p %}">{{ p }}</a>
+    {% endfor %}
+  {% endblock pagination.allpages %}
+{% endblock pagination %}
+
+
