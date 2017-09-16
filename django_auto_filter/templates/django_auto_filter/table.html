@@ -21,12 +21,10 @@
                         <a href="{% querystring table.prefixed_page_field=page %}">{{ page }}</a>
                     </li>
                 {% endif %}
-                {% if page == 1 and current_page > 5 or pagina == page_count_minus_1 and current_page <= page_count_minus_5 %}
-                    <li class="current">...</li>
-                {% endif %}
             {% endwith %}
         {% endfor %}
     {% endblock pagination.allpages %}
+
     </ul>
   {% endwith %}
 {% endblock pagination %}
