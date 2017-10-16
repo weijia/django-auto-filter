@@ -34,6 +34,14 @@ class TableGenerator(object):
         return self.get_table_from_queryset(self.model_class.objects.all())
 
     def get_table_report_class(self):
+        """
+        Generate the following table class:
+        class XxxxxAutoTable(TableReport):
+            class Meta:
+                model = Xxxxx
+                exclude = []
+        :return:
+        """
         self.report_attr_dict = {}
 
         # content_type = ContentType.objects.get_for_model(self.model_class)

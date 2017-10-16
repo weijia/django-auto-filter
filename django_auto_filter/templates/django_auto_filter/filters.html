@@ -43,14 +43,18 @@
   {% block filter_block %}
   <form action="" method="get" class="form-inline" id="auto-filter-form"
         keyword_placeholder="{{ keyword_fields|join:' / ' }}">
+    {% block filter_inputs %}
       {% csrf_token %}
       {{ filter.form.media }}
       <legend>{% trans 'Filter:'%}</legend>
       {{ filter.form|bootstrap}}<br/><br/>
+    {% endblock %}
+    {% block filter_button %}
       <div class="form-group">
           <!--<input type="submit" />-->
-          <button type="submit" class="btn btn-primary">{% trans 'Search' %}</button>
+        <button type="submit" class="btn btn-primary">{% trans 'Search' %}</button>
       </div>
+    {% endblock %}
   </form>
   {% endblock %}
   <div class="scroll-table-container">
