@@ -2,6 +2,8 @@
 #
 INSTALLED_APPS += (
     'django.contrib.staticfiles',
+    'tagging',
+    'tagging_app',
     'bootstrapform',
     'django_tables2',
     'django_tables2_reports',
