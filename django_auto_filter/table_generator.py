@@ -1,9 +1,9 @@
 from django_tables2_reports.tables import TableReport
 try:
     from django_auto_filter.tag_column import RowInfoColumn, TagColumn
+    from tagging_app.tagging_app_utils import get_tag_str_from_tag_list
 except:
     pass
-from tagging_app.tagging_app_utils import get_tag_str_from_tag_list
 
 
 def render_tags(self, value):
