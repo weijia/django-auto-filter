@@ -1,7 +1,8 @@
 from django_tables2_reports.tables import TableReport
-import django_tables2 as tables
-
-from django_auto_filter.tag_column import RowInfoColumn, TagColumn
+try:
+    from django_auto_filter.tag_column import RowInfoColumn, TagColumn
+except:
+    pass
 from tagging_app.tagging_app_utils import get_tag_str_from_tag_list
 
 
@@ -80,6 +81,10 @@ class TableGenerator(object):
         }
 
     def is_tag_exists(self):
+        try:
+            from django_auto_filter.tag_column import RowInfoColumn, TagColumn
+        except:
+            return False
         all_objects = self.model_class.objects.all()
         if all_objects.exists():
             if hasattr(all_objects[0], "tags"):
