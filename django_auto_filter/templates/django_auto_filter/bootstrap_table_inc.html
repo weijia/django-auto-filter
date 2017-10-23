@@ -1,0 +1,11 @@
+{% load bootstrap static %}
+
+{% block bootstrap_table_scripts %}
+  <link rel="stylesheet" href="{% static 'js/bootstrap-table/dist/bootstrap-table.min.css' %}">
+  <!--<script src="{% static 'js/dragtable/jquery.dragtable.js' %}" ></script>-->
+  <!--<script src="{% static 'js/bootstrap-table/dist/extensions/editable/bootstrap-table-editable.js' %}"></script>-->
+  <!--<script src="{% static 'js/bootstrap-table/dist/extensions/reorder-columns/bootstrap-table-reorder-columns.min.js' %}"></script>-->
+  <script type='text/javascript' src="{% static 'js/jquery-ui.js' %}"></script>
+  <script src="{% static 'js/bootstrap-table/dist/bootstrap-table.js'%}"></script>
+  <script src="{% static 'js/bootstrap_table_render.js'%}"></script>
+{% endblock %}
